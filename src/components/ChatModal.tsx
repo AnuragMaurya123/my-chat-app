@@ -3,15 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ChatMessage from "./ChatMessage";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 
 // Props
 interface ChatModalProps {
@@ -80,18 +71,24 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md flex flex-col max-h-[80vh]">
-        <DialogHeader>
-          <div className="flex justify-between items-center">
-            <DialogTitle>Chat</DialogTitle>
-            
-          </div>
-        </DialogHeader>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+      <div className="bg-white w-full max-w-md rounded-lg shadow-xl flex flex-col max-h-[80vh] overflow-hidden">
+        {/* Header */}
+        <div className="p-4 border-b flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Chat</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+          >
+            ×
+          </button>
+        </div>
 
         {/* Chat messages */}
-        <div className="flex-1 overflow-y-auto space-y-2 pr-2" style={{ maxHeight: "300px" }}>
+        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2" style={{ maxHeight: "300px" }}>
           {messages.map((msg, i) => (
             <ChatMessage key={i} text={msg.text} sender={msg.sender} />
           ))}
@@ -99,24 +96,24 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Input area */}
-        <div className="mt-4">
-          <Textarea
+        <div className="p-4 border-t">
+          <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder="Type your message..."
             rows={2}
-            className="resize-none"
+            className="w-full resize-none border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
           />
-          <Button
+          <button
             onClick={handleSend}
-            className="mt-2 w-full"
+            className="mt-2 w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition"
           >
             Send
-          </Button>
+          </button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 
